@@ -35,8 +35,8 @@ public class Sistema {
 	
 	public void iniciaSistema() {
 		Gerador.gerarChegadas(fila);
-		Gerador.geraFalhasServ1(fila);
-		Gerador.geraFalhasServ2(fila);
+		Gerador.geraFalhasServ1(fila, serv1);
+		Gerador.geraFalhasServ2(fila, serv2);
 		Evento e;
 		while (r.getTempo().getEmSegundos() < tFinal.getEmSegundos() && !fila.isEmpty()) {
 			//enquanto tempo do primeiro for igual a tempo, consome.
