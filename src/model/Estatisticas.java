@@ -29,7 +29,7 @@ public class Estatisticas {
 
 	private int numeroFalhasServ1;
 	private int numeroFalhasServ2;
-	
+
 	private double percentTempoEmFalhaServ1;
 	private double percentTempoEmFalhaServ2;
 
@@ -62,7 +62,7 @@ public class Estatisticas {
 
 		numeroFalhasServ1 = 0;
 		numeroFalhasServ2 = 0;
-		
+
 		percentTempoEmFalhaServ1 = 0;
 		percentTempoEmFalhaServ2 = 0;
 
@@ -109,22 +109,26 @@ public class Estatisticas {
 
 	public void setTaxaMediaOcupacaoDoServidor1(Tempo atual, Servidor serv) {
 		double tempoOcupadoAcumulado = taxaMediaOcupacaoDoServidor1 * pesoAcumulado;
+//		System.out.println("Entrou");
+//		System.out.println("TempoOcupadoAcumulado = "+tempoOcupadoAcumulado);
+//		System.out.println("TempoAtual = "+atual.getEmSegundos());
+//		System.out.println("TempoTotalAcumulado = "+pesoAcumulado);
 		double tempoDesdeUltimaVerificacao = atual.getEmSegundos() - pesoAcumulado;
 		if (serv.getEstado() == EstadoServidor.OCUPADO) {
 			this.taxaMediaOcupacaoDoServidor1 = (tempoOcupadoAcumulado + tempoDesdeUltimaVerificacao)
 					/ atual.getEmSegundos();
-			this.percentTempoEmFalhaServ1 = (percentTempoEmFalhaServ1 * pesoAcumulado)
-					/ atual.getEmSegundos();
+			this.percentTempoEmFalhaServ1 = (percentTempoEmFalhaServ1 * pesoAcumulado) / atual.getEmSegundos();
 		} else {
 			this.taxaMediaOcupacaoDoServidor1 = tempoOcupadoAcumulado / atual.getEmSegundos();
 			if (EstadoServidor.MANUTENCAO == serv.getEstado()) {
-				this.percentTempoEmFalhaServ1 = (percentTempoEmFalhaServ1 * pesoAcumulado +
-						tempoDesdeUltimaVerificacao)/atual.getEmSegundos();
-			} else {
-				this.percentTempoEmFalhaServ1 = (percentTempoEmFalhaServ1 * pesoAcumulado)
+				this.percentTempoEmFalhaServ1 = (percentTempoEmFalhaServ1 * pesoAcumulado + tempoDesdeUltimaVerificacao)
 						/ atual.getEmSegundos();
+			} else {
+				this.percentTempoEmFalhaServ1 = (percentTempoEmFalhaServ1 * pesoAcumulado) / atual.getEmSegundos();
 			}
 		}
+//		System.out.println("Taxa = "+taxaMediaOcupacaoDoServidor1);
+//		System.out.println("SAIU");
 	}
 
 	public void setTaxaMediaOcupacaoDoServidor2(Tempo atual, Servidor serv) {
@@ -133,16 +137,14 @@ public class Estatisticas {
 		if (serv.getEstado() == EstadoServidor.OCUPADO) {
 			this.taxaMediaOcupacaoDoServidor2 = (tempoOcupadoAcumulado + tempoDesdeUltimaVerificacao)
 					/ atual.getEmSegundos();
-			this.percentTempoEmFalhaServ2 = (percentTempoEmFalhaServ1 * pesoAcumulado)
-					/ atual.getEmSegundos();
+			this.percentTempoEmFalhaServ2 = (percentTempoEmFalhaServ2 * pesoAcumulado) / atual.getEmSegundos();
 		} else {
 			this.taxaMediaOcupacaoDoServidor2 = tempoOcupadoAcumulado / atual.getEmSegundos();
 			if (EstadoServidor.MANUTENCAO == serv.getEstado()) {
-				this.percentTempoEmFalhaServ2 = (percentTempoEmFalhaServ2 * pesoAcumulado +
-						tempoDesdeUltimaVerificacao)/atual.getEmSegundos();
-			} else {
-				this.percentTempoEmFalhaServ2 = (percentTempoEmFalhaServ2 * pesoAcumulado)
+				this.percentTempoEmFalhaServ2 = (percentTempoEmFalhaServ2 * pesoAcumulado + tempoDesdeUltimaVerificacao)
 						/ atual.getEmSegundos();
+			} else {
+				this.percentTempoEmFalhaServ2 = (percentTempoEmFalhaServ2 * pesoAcumulado) / atual.getEmSegundos();
 			}
 		}
 	}
@@ -157,21 +159,24 @@ public class Estatisticas {
 
 	// Método chamado a todo evento que acontece
 	public void recalcula(Tempo tempo, Servidor serv1, Servidor serv2) {
-		setNumeroMedioDeEntidadeFila1(tempo, serv1);
-		setNumeroMedioDeEntidadeFila2(tempo, serv2);
-		setNumeroMedioDeEntidadeFilas(tempo, serv1, serv2);
-		setTaxaMediaOcupacaoDoServidor1(tempo, serv1);
-		setTaxaMediaOcupacaoDoServidor2(tempo, serv2);
-		pesoAcumulado = tempo.getEmSegundos();
+		if (tempo.getEmSegundos() != 0) {
+			setNumeroMedioDeEntidadeFila1(tempo, serv1);
+			setNumeroMedioDeEntidadeFila2(tempo, serv2);
+			setNumeroMedioDeEntidadeFilas(tempo, serv1, serv2);
+			setTaxaMediaOcupacaoDoServidor1(tempo, serv1);
+			setTaxaMediaOcupacaoDoServidor2(tempo, serv2);
+			pesoAcumulado = tempo.getEmSegundos();
+		}
 	}
 
 	public double getTempoMedioEntidadeNaFilaServ1() {
-		return tempoMedioEntidadeNaFilaServ2;
+		return tempoMedioEntidadeNaFilaServ1;
 	}
 
 	public void setTempoMedioEntidadeNaFilaServ1(Tempo tEmFila) {
 		auxContFila1++;
-		this.tempoMedioEntidadeNaFilaServ1 = (tempoMedioEntidadeNaFilaServ1 + tEmFila.getEmSegundos()) / auxContFila1;
+		this.tempoMedioEntidadeNaFilaServ1 = (tempoMedioEntidadeNaFilaServ1 * (auxContFila1 - 1)
+				+ tEmFila.getEmSegundos()) / auxContFila1;
 		setTempoMedioEntidadeNaFilaTotal(tEmFila);
 	}
 
@@ -181,7 +186,8 @@ public class Estatisticas {
 
 	public void setTempoMedioEntidadeNaFilaServ2(Tempo tEmFila) {
 		auxContFila2++;
-		this.tempoMedioEntidadeNaFilaServ2 = (tempoMedioEntidadeNaFilaServ2 + tEmFila.getEmSegundos()) / auxContFila1;
+		this.tempoMedioEntidadeNaFilaServ2 = (tempoMedioEntidadeNaFilaServ2 * (auxContFila2 - 1)
+				+ tEmFila.getEmSegundos()) / auxContFila2;
 		setTempoMedioEntidadeNaFilaTotal(tEmFila);
 	}
 
@@ -190,8 +196,8 @@ public class Estatisticas {
 	}
 
 	private void setTempoMedioEntidadeNaFilaTotal(Tempo tEmFila) {
-		this.tempoMedioEntidadeNaFilaTotal = (tempoMedioEntidadeNaFilaTotal + tEmFila.getEmSegundos())
-				/ (auxContFila1 + auxContFila2);
+		this.tempoMedioEntidadeNaFilaTotal = (tempoMedioEntidadeNaFilaTotal * (auxContFila1 + auxContFila2 - 1)
+				+ tEmFila.getEmSegundos()) / (auxContFila1 + auxContFila2);
 	}
 
 	public double getTempoMedioNoSistemaTipo1() {
@@ -200,7 +206,7 @@ public class Estatisticas {
 
 	// numeroEntidadesSaidaTipo1 ja deve estar incrementado
 	public void setTempoMedioNoSistemaTipo1(Entidade e, Tempo saida) {
-		this.tempoMedioNoSistemaTipo1 = (tempoMedioNoSistemaTipo1
+		this.tempoMedioNoSistemaTipo1 = (tempoMedioNoSistemaTipo1 * (numeroEntidadesSaidaTipo1 - 1)
 				+ (saida.getEmSegundos() - e.getChegada().getEmSegundos())) / numeroEntidadesSaidaTipo1;
 	}
 
@@ -209,12 +215,12 @@ public class Estatisticas {
 	}
 
 	public void setTempoMedioNoSistemaTipo2(Entidade e, Tempo saida) {
-		this.tempoMedioNoSistemaTipo2 = (tempoMedioNoSistemaTipo2
+		this.tempoMedioNoSistemaTipo2 = (tempoMedioNoSistemaTipo2 * (numeroEntidadesSaidaTipo2 - 1)
 				+ (saida.getEmSegundos() - e.getChegada().getEmSegundos())) / numeroEntidadesSaidaTipo2;
 	}
 
 	public double getTempoMedioNoSistemaTotal() {
-		return (tempoMedioNoSistemaTipo1 + tempoMedioNoSistemaTipo2)/2;
+		return (tempoMedioNoSistemaTipo1 + tempoMedioNoSistemaTipo2) / 2;
 	}
 
 	public int getNumeroEntidadesTipo1() {
@@ -256,7 +262,7 @@ public class Estatisticas {
 	public int getNumeroEntidadesSaida() {
 		return numeroEntidadesSaidaTipo2 + numeroEntidadesSaidaTipo1;
 	}
-	
+
 	public int getNumeroFalhasServ1() {
 		return numeroFalhasServ1;
 	}
@@ -272,10 +278,14 @@ public class Estatisticas {
 	public void incNumeroFalhasServ2() {
 		numeroFalhasServ2++;
 	}
-	
-	public double getPercentTempoEmFalhaServ1() {return percentTempoEmFalhaServ1;};
-	
-	public double getPercentTempoEmFalhaServ2() {return percentTempoEmFalhaServ2;};
+
+	public double getPercentTempoEmFalhaServ1() {
+		return percentTempoEmFalhaServ1;
+	};
+
+	public double getPercentTempoEmFalhaServ2() {
+		return percentTempoEmFalhaServ2;
+	};
 
 	public int getnumeroTrocas() {
 		return numeroTrocas;

@@ -348,7 +348,7 @@ public class Gerador {
 		for (double i = 0; i < fim; i += constante2) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			serv = geraTempoServicoTipo2();
-			e = new Entidade(1, t, serv);
+			e = new Entidade(2, t, serv);
 			ev = new EventoCriacao(e,t);
 			fila.offer(ev);
 		}
@@ -365,7 +365,7 @@ public class Gerador {
 		for (double i = 0; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			serv = geraTempoServicoTipo2();
-			e = new Entidade(1, t, serv);
+			e = new Entidade(2, t, serv);
 			ev = new EventoCriacao(e,t);
 			fila.offer(ev);
 			
@@ -384,7 +384,7 @@ public class Gerador {
 		for (double i = 0; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			serv = geraTempoServicoTipo2();
-			e = new Entidade(1, t, serv);
+			e = new Entidade(2, t, serv);
 			ev = new EventoCriacao(e,t);
 			fila.offer(ev);
 			
@@ -403,7 +403,7 @@ public class Gerador {
 		for (double i = 0; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			serv = geraTempoServicoTipo2();
-			e = new Entidade(1, t, serv);
+			e = new Entidade(2, t, serv);
 			ev = new EventoCriacao(e,t);
 			fila.offer(ev);
 			
@@ -422,7 +422,7 @@ public class Gerador {
 		for (double i = 0; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			serv = geraTempoServicoTipo2();
-			e = new Entidade(1, t, serv);
+			e = new Entidade(2, t, serv);
 			ev = new EventoCriacao(e,t);
 			fila.offer(ev);
 			
@@ -449,30 +449,30 @@ public class Gerador {
 	public static Tempo geraTempoFalhaServ1(double d) {
 		switch (tEmFalhaServidor1) {
 		case 'n':
-			return new Tempo(norm(mediaFS1, desvioPadraoFS1), UnidadeTempo.SEGUNDOS);
+			return new Tempo(norm(mediaFS1, desvioPadraoFS1)+d, UnidadeTempo.SEGUNDOS);
 		case 't':
-			return new Tempo(triang(aFS1, bFS1, cFS1), UnidadeTempo.SEGUNDOS);
+			return new Tempo(triang(aFS1, bFS1, cFS1)+d, UnidadeTempo.SEGUNDOS);
 		case 'e':
-			return new Tempo(exp(mediaFS1), UnidadeTempo.SEGUNDOS);
+			return new Tempo(exp(mediaFS1)+d, UnidadeTempo.SEGUNDOS);
 		case 'u':
-			return new Tempo(unif(minFS1, maxFS1), UnidadeTempo.SEGUNDOS);
+			return new Tempo(unif(minFS1, maxFS1)+d, UnidadeTempo.SEGUNDOS);
 		default:
-			return new Tempo(constanteFS1, UnidadeTempo.SEGUNDOS);
+			return new Tempo(constanteFS1+d, UnidadeTempo.SEGUNDOS);
 		}
 	}
 
 	public static Tempo geraTempoFalhaServ2(double d) {
 		switch (tEmFalhaServidor2) {
 		case 'n':
-			return new Tempo(norm(mediaFS2, desvioPadraoFS2), UnidadeTempo.SEGUNDOS);
+			return new Tempo(norm(mediaFS2, desvioPadraoFS2)+d, UnidadeTempo.SEGUNDOS);
 		case 't':
-			return new Tempo(triang(aFS2, bFS2, cFS2), UnidadeTempo.SEGUNDOS);
+			return new Tempo(triang(aFS2, bFS2, cFS2)+d, UnidadeTempo.SEGUNDOS);
 		case 'e':
-			return new Tempo(exp(mediaFS2), UnidadeTempo.SEGUNDOS);
+			return new Tempo(exp(mediaFS2)+d, UnidadeTempo.SEGUNDOS);
 		case 'u':
-			return new Tempo(unif(minFS2, maxFS2), UnidadeTempo.SEGUNDOS);
+			return new Tempo(unif(minFS2, maxFS2)+d, UnidadeTempo.SEGUNDOS);
 		default:
-			return new Tempo(constanteFS2, UnidadeTempo.SEGUNDOS);
+			return new Tempo(constanteFS2+d, UnidadeTempo.SEGUNDOS);
 		}
 	}
 
@@ -497,11 +497,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ1Constante(PriorityQueue<Evento> fila, Servidor serv) {
+		//TODO
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += constanteNFS1) {
+		for (double i = constanteNFS1; i < fim; i += constanteNFS1) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -509,12 +510,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ1PorUniforme(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = unif(minNFS1, maxNFS1);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -524,12 +525,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ1PorExponencial(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = exp(mediaNFS1);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -539,12 +540,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ1PorTriangular(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = triang(aNFS1,bNFS1,cNFS1);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -554,12 +555,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ1PorNormal(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = norm(mediaNFS1, desvioPadraoNFS1);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -594,7 +595,7 @@ public class Gerador {
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += constanteNFS2) {
+		for (double i = constanteNFS2; i < fim; i += constanteNFS2) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -602,12 +603,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ2PorUniforme(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = unif(minNFS2, maxNFS2);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -617,12 +618,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ2PorExponencial(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = exp(mediaNFS2);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -632,12 +633,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ2PorTriangular(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = triang(aNFS2,bNFS2,cNFS2);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);
@@ -647,12 +648,12 @@ public class Gerador {
 	}
 
 	private static void geraFalhasServ2PorNormal(PriorityQueue<Evento> fila, Servidor serv) {
-		double proxValor = 0;
+		double proxValor = norm(mediaNFS2, desvioPadraoNFS2);
 		Tempo t;
 		Evento ev;
 		double fim = tempoFinalSim.getEmSegundos();
 		
-		for (double i = 0; i < fim; i += proxValor) {
+		for (double i = proxValor; i < fim; i += proxValor) {
 			t = new Tempo(i,UnidadeTempo.SEGUNDOS);
 			ev = new EventoFalha(serv, t);
 			fila.offer(ev);

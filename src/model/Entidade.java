@@ -29,6 +29,9 @@ public class Entidade {
 	
 	public void decFaltaPraTerminar(double tempo) {
 		faltaPraTerminar = faltaPraTerminar - (tempo - tInicioAtendimento.getEmSegundos());
+		if (faltaPraTerminar < 0) {
+			faltaPraTerminar = 0;
+		}
 	}
 	
 	public Tempo getTInicioAtendimento() {
