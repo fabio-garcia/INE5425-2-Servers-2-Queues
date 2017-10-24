@@ -1219,14 +1219,13 @@ public class JanelaEntradas {
 					Gerador.tempoFinalSim = new Tempo(Double.parseDouble(txtDuracao.getText()), UnidadeTempo.SEGUNDOS);
 					
 					validos = true;
-					JOptionPane.showMessageDialog(null, "Entrada OK");
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Entrada Inválida");
 					validos = false;
 				}
 			}
 		});
-		btnIniciarSimulao.setBounds(430, 632, 154, 23);
+		btnIniciarSimulao.setBounds(430, 642, 154, 23);
 		frame.getContentPane().add(btnIniciarSimulao);
 		
 		//Config inicial Constante
@@ -1328,7 +1327,7 @@ public class JanelaEntradas {
 				passoAPasso = !passoAPasso;
 			}
 		});
-		chckbxPassoAPasso.setBounds(327, 642, 97, 23);
+		chckbxPassoAPasso.setBounds(458, 612, 126, 23);
 		frame.getContentPane().add(chckbxPassoAPasso);
 		
 		lblDado2TEmFalhaServ2.setVisible(false);
